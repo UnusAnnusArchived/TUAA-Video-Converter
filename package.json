@@ -1,0 +1,23 @@
+{
+  "name": "tuaa-video-converter",
+  "module": "src/main.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun run ."
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/fluent-ffmpeg": "^2.1.24",
+    "@types/node": "^20.11.13",
+    "@types/yargs": "^17.0.32"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "fluent-ffmpeg": "^2.1.2",
+    "get-video-dimensions": "^1.0.0",
+    "simple-hls": "https://github.com/mikecjtio/simple-hls",
+    "yargs": "^17.7.2"
+  }
+}
