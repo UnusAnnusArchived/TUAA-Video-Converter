@@ -17,6 +17,7 @@
   "dependencies": {
     "fluent-ffmpeg": "^2.1.2",
     "get-video-dimensions": "^1.0.0",
+    "moment": "^2.30.1",
     "simple-hls": "https://github.com/mikecjtio/simple-hls",
     "yargs": "^17.7.2"
   }
