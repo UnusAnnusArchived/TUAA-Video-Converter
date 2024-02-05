@@ -16,7 +16,8 @@ const convert = async (file: string) => {
     fs.appendFileSync("errors.txt", `Error processing ${file}`);
   });
 
-  const { width: originalWidth, height: originalHeight } = await getDimensions(file);
+  const { width: originalWidth, height: originalHeight } =
+    await getDimensions(file);
   const heightsToUse = [];
   for (let i = 0; i < possibleHeights.length; i++) {
     if (originalHeight >= possibleHeights[i]) {
@@ -60,6 +61,8 @@ const convert = async (file: string) => {
     renditions,
   });
   await transcoder.transcode();
+
+  return folderName;
 };
 
 export default convert;

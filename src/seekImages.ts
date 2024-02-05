@@ -49,11 +49,23 @@ export const createSeekMetadata = (
   rate: number,
   rootUrl: string,
 ) => {
+  console.log(seekFolder);
+
+  const basePathSplit = seekFolder.split("/");
+
+  const basePath = basePathSplit.splice(basePathSplit.length - 2, 2).join("/");
+
+  const baseUrl = `${rootUrl}/${basePath}`;
+
+  console.log(baseUrl);
+
   const listing = fs.readdirSync(seekFolder);
 
   let vtt = "WEBVTT\n";
 
   const vttTimeFormat = "HH:mm:ss.SSS";
+
+  console.log("Creating seek.vtt...");
 
   for (let i = 0; i < listing.length; i++) {
     const fromSeconds = rate * i;
@@ -65,10 +77,14 @@ export const createSeekMetadata = (
       .utc()
       .format(
         vttTimeFormat,
-      )}\n${rootUrl}/${(i + 1).toString().padStart(6, "0")}.jpg\n`;
+      )} \n${baseUrl}/${(i + 1).toString().padStart(6, "0")}.jpg\n`;
   }
 
+  console.log("Writing seek.vtt...");
+
   fs.writeFileSync(path.join(seekFolder, "seek.vtt"), vtt);
+
+  console.log("Finished");
 };
 
 export default createSeekImages;
