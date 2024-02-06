@@ -3,6 +3,7 @@ import { hideBin } from "yargs/helpers";
 import convert from "./convert";
 import createSeekImages, { createSeekMetadata } from "./seekImages";
 import convertThumbnail from "./thumbnail";
+import removeOriginalFiles from "./removeOriginalFiles";
 
 yargs(hideBin(process.argv))
   .command(
@@ -108,6 +109,26 @@ yargs(hideBin(process.argv))
     },
     async (argv) => {
       await convertThumbnail(argv.thumbnailPath, argv.outputDir);
+    },
+  )
+  .command(
+    "remove-originals [file]",
+    "Removes or moves original files",
+    (yargs) => {
+      return yargs
+        .positional("file", {
+          type: "string",
+          description:
+            "The original mp4 to rename as original.mp4 and move to it's folder.",
+          demandOption: true,
+        })
+        .option("thumbnail", {
+          type: "string",
+          description: "The thumbnail to delete",
+        });
+    },
+    (argv) => {
+      removeOriginalFiles(argv.file, argv.thumbnail);
     },
   )
   .parse();
