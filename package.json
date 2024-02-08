@@ -4,7 +4,8 @@
   "module": "src/main.ts",
   "type": "module",
   "scripts": {
-    "start": "bun run ."
+    "start": "bun run .",
+    "build": "bun build . --compile --outfile dist/tuaaConverter"
   },
   "devDependencies": {
     "@types/bun": "latest",
