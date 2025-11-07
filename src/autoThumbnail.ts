@@ -1,10 +1,11 @@
 import ffmpeg from "fluent-ffmpeg";
 
-const convertThumbnail = (thumbnailPath: string, outDir: string) => {
+const autoThumbnail = (file: string, outDir: string) => {
   return new Promise<void>((resolve) => {
-    console.log("Converting thumbnail");
-    ffmpeg(thumbnailPath)
+    console.log("Generating thumbnail");
+    ffmpeg(file)
       .videoFilter("scale=1280x720")
+      .frames(1)
       .output(`${outDir}${outDir.endsWith("/") ? "" : "/"}thumb.avif`)
       .on("start", (command) => {
         console.log(command);
@@ -20,4 +21,4 @@ const convertThumbnail = (thumbnailPath: string, outDir: string) => {
   });
 };
 
-export default convertThumbnail;
+export default autoThumbnail;

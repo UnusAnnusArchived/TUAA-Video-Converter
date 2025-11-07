@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import ffmpeg from "fluent-ffmpeg";
 import moment from "moment";
+import urlJoin from "url-join";
 
 const createSeekImages = (file: string, rate: number) => {
   return new Promise<string>((resolve) => {
@@ -17,9 +18,7 @@ const createSeekImages = (file: string, rate: number) => {
     const seekFolder = path.join(rootFolder, "seek");
 
     if (fs.existsSync(seekFolder)) {
-      throw new Error(
-        "Seek folder already exists! Delete the folder to continue",
-      );
+      throw new Error("Seek folder already exists! Delete the folder to continue");
     }
 
     fs.mkdirSync(seekFolder);
@@ -44,18 +43,17 @@ const createSeekImages = (file: string, rate: number) => {
   });
 };
 
-export const createSeekMetadata = (
-  seekFolder: string,
-  rate: number,
-  rootUrl: string,
-) => {
+export const createSeekMetadata = (seekFolder: string, rate: number, rootUrl: string) => {
   console.log(seekFolder);
 
   const basePathSplit = seekFolder.split("/");
 
-  const basePath = basePathSplit.splice(basePathSplit.length - 2, 2).join("/");
+  const basePath = basePathSplit
+    .splice(basePathSplit.length - 2, 2)
+    .join("/")
+    .replaceAll("\\", "/");
 
-  const baseUrl = `${rootUrl}/${basePath}`;
+  const baseUrl = urlJoin(rootUrl, encodeURIComponent(basePath).replaceAll("%2F", "/"));
 
   console.log(baseUrl);
 
@@ -75,9 +73,7 @@ export const createSeekMetadata = (
       .utc()
       .format(vttTimeFormat)} --> ${moment(toSeconds * 1000)
       .utc()
-      .format(
-        vttTimeFormat,
-      )} \n${baseUrl}/${(i + 1).toString().padStart(6, "0")}.jpg\n`;
+      .format(vttTimeFormat)} \n${baseUrl}/${(i + 1).toString().padStart(6, "0")}.jpg\n`;
   }
 
   console.log("Writing seek.vtt...");

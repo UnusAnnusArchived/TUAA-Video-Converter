@@ -4,6 +4,7 @@ import convert from "./convert";
 import createSeekImages, { createSeekMetadata } from "./seekImages";
 import convertThumbnail from "./thumbnail";
 import removeOriginalFiles from "./removeOriginalFiles";
+import autoThumbnail from "./autoThumbnail";
 
 yargs(hideBin(process.argv))
   .command(
@@ -28,9 +29,18 @@ yargs(hideBin(process.argv))
         .option("rate", {
           alias: "r",
           type: "number",
-          description:
-            "Set the rate of creating seek images. 4 means every 4 seconds, 5 means every 5 seconds, etc...",
+          description: "Set the rate of creating seek images. 4 means every 4 seconds, 5 means every 5 seconds, etc...",
           default: 4,
+        })
+        .option("auto-thumbnail", {
+          type: "boolean",
+          description: "Auto generate a thumbnail from the first frame.",
+          default: false,
+        })
+        .option("auto-cleanup", {
+          type: "boolean",
+          description: "Automatically cleans up files.",
+          default: false,
         });
     },
     async (argv) => {
@@ -38,9 +48,15 @@ yargs(hideBin(process.argv))
       const seekFolder = await createSeekImages(argv.file, argv.rate);
       createSeekMetadata(seekFolder, argv.rate, argv.rootUrl);
       if (argv.thumbnailPath) {
-        convertThumbnail(argv.thumbnailPath, folderName);
+        await convertThumbnail(argv.thumbnailPath, folderName);
+      } else if (argv.autoThumbnail) {
+        await autoThumbnail(argv.file, folderName);
       }
-    },
+
+      if (argv.autoCleanup) {
+        await removeOriginalFiles(argv.file, true);
+      }
+    }
   )
   .command(
     "create-seek-images [file]",
@@ -55,14 +71,13 @@ yargs(hideBin(process.argv))
         .option("rate", {
           alias: "r",
           type: "number",
-          description:
-            "Set the rate of creating seek images. 4 means every 4 seconds, 5 means every 5 seconds, etc...",
+          description: "Set the rate of creating seek images. 4 means every 4 seconds, 5 means every 5 seconds, etc...",
           default: 4,
         });
     },
     async (argv) => {
       await createSeekImages(argv.file, argv.rate);
-    },
+    }
   )
   .command(
     "create-seek-metadata [folder]",
@@ -82,14 +97,13 @@ yargs(hideBin(process.argv))
         .option("rate", {
           alias: "r",
           type: "number",
-          description:
-            "Set the rate of creating seek images. 4 means every 4 seconds, 5 means every 5 seconds, etc...",
+          description: "Set the rate of creating seek images. 4 means every 4 seconds, 5 means every 5 seconds, etc...",
           default: 4,
         });
     },
     (argv) => {
       createSeekMetadata(argv.folder, argv.rate, argv.rootUrl);
-    },
+    }
   )
   .command(
     "convert-thumbnail [thumbnail-path] [output-dir]",
@@ -109,7 +123,7 @@ yargs(hideBin(process.argv))
     },
     async (argv) => {
       await convertThumbnail(argv.thumbnailPath, argv.outputDir);
-    },
+    }
   )
   .command(
     "remove-originals [file]",
@@ -118,17 +132,20 @@ yargs(hideBin(process.argv))
       return yargs
         .positional("file", {
           type: "string",
-          description:
-            "The original mp4 to rename as original.mp4 and move to it's folder.",
+          description: "The original mp4 to rename as original.mp4 and move to it's folder.",
           demandOption: true,
         })
         .option("thumbnail", {
           type: "string",
           description: "The thumbnail to delete",
+        })
+        .option("disable-countdown-dangerous", {
+          type: "boolean",
+          description: "Disables the countdown. THIS IS DANGEROUS; MAKE SURE YOU KNOW WHAT YOU'RE DOING.",
         });
     },
     (argv) => {
-      removeOriginalFiles(argv.file, argv.thumbnail);
-    },
+      removeOriginalFiles(argv.file, argv.disableCountdownDangerous, argv.thumbnail);
+    }
   )
   .parse();

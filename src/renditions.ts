@@ -12,7 +12,7 @@ export interface Rendition {
 }
 
 const presetRenditions: { [key: number]: Rendition } = {
-  144: {
+  256: {
     width: 256,
     height: 144,
     profile: "main",
@@ -24,7 +24,7 @@ const presetRenditions: { [key: number]: Rendition } = {
     ts_title: "144p",
     master_title: "144p",
   },
-  240: {
+  426: {
     width: 426,
     height: 240,
     profile: "main",
@@ -36,7 +36,7 @@ const presetRenditions: { [key: number]: Rendition } = {
     ts_title: "240p",
     master_title: "240p",
   },
-  360: {
+  640: {
     width: 640,
     height: 360,
     profile: "main",
@@ -48,7 +48,7 @@ const presetRenditions: { [key: number]: Rendition } = {
     ts_title: "360p",
     master_title: "360p",
   },
-  480: {
+  854: {
     width: 854,
     height: 480,
     profile: "high",
@@ -60,7 +60,7 @@ const presetRenditions: { [key: number]: Rendition } = {
     ts_title: "480p",
     master_title: "480p",
   },
-  720: {
+  1280: {
     width: 1280,
     height: 720,
     profile: "high",
@@ -72,7 +72,7 @@ const presetRenditions: { [key: number]: Rendition } = {
     ts_title: "720p",
     master_title: "720p",
   },
-  1080: {
+  1920: {
     width: 1920,
     height: 1080,
     profile: "high",
@@ -84,7 +84,7 @@ const presetRenditions: { [key: number]: Rendition } = {
     ts_title: "1080p",
     master_title: "1080p",
   },
-  1440: {
+  2560: {
     width: 2560,
     height: 1440,
     profile: "high",
@@ -96,7 +96,7 @@ const presetRenditions: { [key: number]: Rendition } = {
     ts_title: "1440p",
     master_title: "1440p",
   },
-  2160: {
+  3840: {
     width: 3840,
     height: 2160,
     profile: "high",
@@ -108,7 +108,7 @@ const presetRenditions: { [key: number]: Rendition } = {
     ts_title: "2160p",
     master_title: "2160p",
   },
-  4320: {
+  7680: {
     width: 7680,
     height: 4320,
     profile: "high",

@@ -5,7 +5,7 @@ import type { Rendition } from "./renditions";
 import fs from "fs";
 import getAudioBitrate from "./tools/getAudioBitrate";
 
-const possibleHeights = [144, 240, 360, 480, 720, 1080, 1440, 2160, 4320];
+const possibleWidths = [256, 426, 640, 854, 1280, 1920, 2560, 3840, 7680];
 
 const roundToTwo = (number: number) => {
   return Math.round(number / 2) * 2;
@@ -16,18 +16,20 @@ const convert = async (file: string) => {
     fs.appendFileSync("errors.txt", `Error processing ${file}`);
   });
 
-  const { width: originalWidth, height: originalHeight } =
-    await getDimensions(file);
-  const heightsToUse = [];
-  for (let i = 0; i < possibleHeights.length; i++) {
-    if (originalHeight >= possibleHeights[i]) {
-      heightsToUse.push(possibleHeights[i]);
-    } else if (i < possibleHeights[i]) {
+  const { width: originalWidth, height: originalHeight } = await getDimensions(file);
+  console.log(originalWidth, originalHeight);
+  const widthsToUse = [];
+  for (let i = 0; i < possibleWidths.length; i++) {
+    if (originalWidth >= possibleWidths[i]) {
+      widthsToUse.push(possibleWidths[i]);
+    } else if (i < possibleWidths[i]) {
       break;
     }
   }
 
-  if (heightsToUse.length < 1) {
+  console.log(widthsToUse.join(", "));
+
+  if (widthsToUse.length < 1) {
     throw new Error("Error finding usable resolutions");
   }
 
@@ -37,11 +39,13 @@ const convert = async (file: string) => {
 
   console.log(audioBitrate);
 
-  const renditions = heightsToUse.map((height) => {
+  const renditions = widthsToUse.map((width) => {
     return {
-      ...presetRenditions[height],
-      width: roundToTwo(height * aspectRatio),
-      height,
+      ...presetRenditions[width],
+      width,
+      height: roundToTwo(width / aspectRatio),
+      ts_title: roundToTwo(width / 1.7777777778).toString(),
+      master_title: roundToTwo(width / 1.7777777778).toString(),
       ba: Math.round(audioBitrate / 1000).toString() + "k",
     } as Rendition;
   });
